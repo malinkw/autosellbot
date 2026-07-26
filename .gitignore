@@ -1,0 +1,41 @@
+# Секреты и окружение
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+build/
+dist/
+
+# Виртуальные окружения
+.venv/
+venv/
+env/
+
+# Логи и данные
+*.log
+app/logs/*.log
+backups/
+*.sqlite
+*.sqlite3
+*.db
+
+# Кэши инструментов
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage/
+htmlcov/
+
+# IDE
+.idea/
+.vscode/
+
+# Прочее
+node_modules/
+*.tmp

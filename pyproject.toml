@@ -1,0 +1,76 @@
+[project]
+name = "autosale-bot"
+version = "1.0.0"
+description = "Промышленный Telegram-бот магазина на aiogram 3 (Clean Architecture + RBAC)"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiogram>=3.13,<4.0",
+    "sqlalchemy[asyncio]>=2.0.35",
+    "asyncpg>=0.29.0",
+    "alembic>=1.13.2",
+    "redis>=5.0.8",
+    "apscheduler>=3.10.4",
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.5.2",
+    "structlog>=24.4.0",
+    "orjson>=3.10.7",
+    "openpyxl>=3.1.5",
+    "reportlab>=4.2.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.6.5",
+    "black>=24.8.0",
+    "mypy>=1.11.2",
+    "pytest>=8.3.3",
+    "pytest-asyncio>=0.24.0",
+    "aiosqlite>=0.20.0",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+src = ["app"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4", "SIM", "ASYNC", "RUF"]
+ignore = ["B008", "RUF001", "RUF002", "RUF003"]
+
+[tool.black]
+line-length = 100
+target-version = ["py313"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true
+disallow_untyped_decorators = false
+warn_return_any = false
+
+# В aiogram `CallbackQuery.message` типизирован как Optional
+# (`Message | InaccessibleMessage | None`), поэтому обращения вида
+# `callback.message.answer(...)` в слое хендлеров дают union-attr. Для inline-
+# сценариев сообщение всегда доступно; бизнес-логика (services/repositories/models)
+# остаётся под полной строгой проверкой.
+[[tool.mypy.overrides]]
+module = "app.handlers.*"
+disable_error_code = ["union-attr"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["app/tests"]
+pythonpath = ["."]
+
+[tool.coverage.run]
+source = ["app"]
